@@ -56,9 +56,13 @@ public struct SystemNotification<Content: View>: View {
     @State
     private var currentId = UUID()
     
+    @State
+    private var contentHeight: Double = 0
+    
     public var body: some View {
         ZStack(alignment: edge.alignment) {
             Color.clear
+            
             content(isActive)
                 .background(style.backgroundColor)
                 .background(style.backgroundMaterial)
@@ -70,11 +74,16 @@ public struct SystemNotification<Content: View>: View {
                     y: style.shadowOffset)
                 .animation(config.animation, value: isActive)
                 .offset(x: 0, y: verticalOffset)
-                #if os(iOS) || os(macOS) || os(watchOS) || os(visionOS)
+#if os(iOS) || os(macOS) || os(watchOS) || os(visionOS)
                 .gesture(swipeGesture, if: config.isSwipeToDismissEnabled)
-                #endif
+#endif
                 .padding(style.padding)
                 .onChange(of: isActive, perform: handlePresentation)
+                .onGeometryChange(for: CGSize.self) { proxy in
+                     proxy.size
+                 } action: {
+                     self.contentHeight = $0.height
+                 }
         }
     }
 }
@@ -88,12 +97,12 @@ private extension SystemNotification {
     var edge: SystemNotificationEdge {
         config.edge
     }
-    
+        
     var verticalOffset: CGFloat {
         if isActive { return 0 }
         switch edge {
-        case .top: return -250
-        case .bottom: return 250
+        case .top: return -100 - contentHeight
+        case .bottom: return 100 + contentHeight
         }
     }
     
@@ -188,7 +197,7 @@ private extension SystemNotification {
                     SystemNotificationMessage(
                         icon: Image(systemName: "bell.fill"),
                         title: "Silent mode",
-                        text: "Silent mode is off"
+                        text: "Silent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off\nSilent mode is off"
                     )
                 }
                 .systemNotificationStyle(.standard)
