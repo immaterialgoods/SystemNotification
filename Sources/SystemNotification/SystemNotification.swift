@@ -101,7 +101,7 @@ private extension SystemNotification {
     var verticalOffset: CGFloat {
         if isActive { return 0 }
         switch edge {
-        case .top: return -100 - contentHeight
+        case .top: return -150 - contentHeight
         case .bottom: return 100 + contentHeight
         }
     }
